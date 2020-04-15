@@ -78,14 +78,20 @@ export const handleSubmit = (
 
       let afterAuthURL: URL
       if (modalOptions.redirectTo) {
-        afterAuthURL = new URL(modalOptions.redirectTo, sd.APP_URL)
+        afterAuthURL = new URL(
+          decodeURIComponent(modalOptions.redirectTo),
+          sd.APP_URL
+        )
       } else {
         afterAuthURL = getRedirect(type)
       }
 
       const result = await apiAuthWithRedirectUrl(res, afterAuthURL)
+      const url = result.href + afterAuthURL.search
 
-      window.location.assign(result.href)
+      debugger
+
+      window.location.assign(url)
     },
     error: (_, res) => {
       const error = res.responseJSON

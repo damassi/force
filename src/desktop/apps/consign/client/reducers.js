@@ -1,5 +1,6 @@
 import * as actions from "./actions"
 import u from "updeep"
+import qs from "qs"
 import { combineReducers } from "redux"
 import { composeReducers } from "../../../components/react/utils/composeReducers"
 import { data as sd } from "sharify"
@@ -36,6 +37,7 @@ const initialState = {
     "Textile Arts",
     "Other",
   ],
+  contextPath: qs.parse(location.search.replace(/^\?/, "")).contextPath,
   currencyOptions: ["USD", "GBP"],
   currentStep: createAccountStep,
   error: null,

@@ -12,6 +12,7 @@ import {
 } from "@artsy/reaction/dist/Artsy/Analytics/v2/Schema"
 
 interface CreateAccountProps {
+  contextPath: string
   title: string
   type: ModalType
   updateAuthFormStateAndClearErrorAction: (type: ModalType) => void
@@ -25,7 +26,7 @@ export class CreateAccount extends React.Component<CreateAccountProps> {
         copy: this.props.title,
         contextModule: ContextModule.consignSubmissionFlow,
         intent: AuthIntent.consign,
-        redirectTo: "/consign/submission",
+        redirectTo: this.redirectTo,
       },
       values,
       formikBag
@@ -37,6 +38,17 @@ export class CreateAccount extends React.Component<CreateAccountProps> {
     updateAuthFormStateAndClearErrorAction(type)
   }
 
+  get redirectTo() {
+    const { contextPath } = this.props
+    let redirectTo = "/consign/submission"
+    if (contextPath) {
+      redirectTo = encodeURIComponent(
+        `${redirectTo}?contextPath=${contextPath}`
+      )
+    }
+    return redirectTo
+  }
+
   render() {
     return (
       <Box mx="auto" maxWidth={550}>
@@ -46,7 +58,7 @@ export class CreateAccount extends React.Component<CreateAccountProps> {
             copy: this.props.title,
             contextModule: ContextModule.consignSubmissionFlow,
             intent: AuthIntent.consign,
-            redirectTo: "/consign/submission",
+            redirectTo: this.redirectTo,
           }}
           type={this.props.type}
           handleSubmit={this.handleSubmit}
@@ -67,7 +79,7 @@ export class CreateAccount extends React.Component<CreateAccountProps> {
 
 const mapStateToProps = state => {
   const {
-    submissionFlow: { authFormState },
+    submissionFlow: { authFormState, contextPath },
   } = state
 
   const stateToTitle = {
@@ -77,6 +89,7 @@ const mapStateToProps = state => {
   }
 
   return {
+    contextPath,
     type: authFormState,
     title: stateToTitle[authFormState],
   }
